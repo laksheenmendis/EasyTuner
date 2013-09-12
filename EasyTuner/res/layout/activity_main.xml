@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/new1">
+    
+    <Button
+        android:id="@+id/btune_gui"
+        android:layout_width="250dp"
+        android:layout_height="94dp" 
+        android:layout_gravity="center"
+        android:layout_marginTop="130dp"
+        android:text="Tune Guitar"
+        android:onClick="tuneGuitar" />
+
+    <Button
+        android:id="@+id/btune_vio"
+        android:layout_width="250dp"
+        android:layout_height="94dp" 
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:text="Tune Violin"
+        android:onClick="tuneViolin"
+        />
+    
+</LinearLayout>
