@@ -9,15 +9,14 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
-	Button tguitar,tviolin;
-	
+	Button tguitar, tviolin;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		tguitar=(Button) findViewById(R.layout.activity_main);
-		tviolin=(Button) findViewById(R.layout.activity_main);
-		
+		tguitar = (Button) findViewById(R.layout.activity_main);
+		tviolin = (Button) findViewById(R.layout.activity_main);
 	}
 
 	@Override
@@ -27,13 +26,16 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	/*
+	 * 
+	 */
 	public void tuneGuitar(View view) {
-		 Intent intent = new Intent(this, TuneGuitarActivity.class);
-		 startActivity(intent);
+		Intent intent = new Intent(this, TuneGuitarActivity.class);
+		startActivity(intent);
 	}
-	
+
 	public void tuneViolin(View view) {
-		 Intent intent = new Intent(this, TuneViolinActivity.class);
-		 startActivity(intent);
+		Intent intent = new Intent(this, TuneViolinActivity.class);
+		startActivity(intent);
 	}
 }

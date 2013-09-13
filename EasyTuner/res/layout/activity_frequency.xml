@@ -9,17 +9,22 @@
     tools:context=".FrequencyActivity" 
     android:background="@drawable/new1">
 
-    <!--  <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" /> -->
-   
-	<Button android:id="@+id/button1"
+	<Button
+	    android:id="@+id/button1"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_gravity="center"
-        android:layout_marginTop="130dp"
-        android:text="Tune Guitar"
-        android:onClick="tuneGuitar" />
+	    android:layout_alignParentTop="true"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginTop="71dp"
+	    android:onClick="recordingStarted"
+	    android:text="Start recording" />
+
+	<TextView
+	    android:id="@+id/textView1"
+	    android:layout_width="100dp"
+	    android:layout_height="40dp"
+	    android:layout_below="@+id/button1"
+	    android:layout_marginTop="130dp"
+	    android:layout_centerHorizontal="true" />
 	
 </RelativeLayout>
