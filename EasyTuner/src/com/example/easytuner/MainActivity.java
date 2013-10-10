@@ -27,13 +27,16 @@ public class MainActivity extends Activity {
 	}
 
 	/*
-	 * 
+	 *Executes when the 'Tune Guitar' button is pressed
 	 */
 	public void tuneGuitar(View view) {
 		Intent intent = new Intent(this, TuneGuitarActivity.class);
 		startActivity(intent);
 	}
 
+	/*
+	 * Executes when the 'Tune Violin' button is pressed
+	 */
 	public void tuneViolin(View view) {
 		Intent intent = new Intent(this, TuneViolinActivity.class);
 		startActivity(intent);

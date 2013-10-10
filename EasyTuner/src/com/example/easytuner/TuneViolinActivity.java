@@ -1,15 +1,22 @@
 package com.example.easytuner;
 
+import com.example.waveprocessor.FrequencyViolinActivity;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 
 public class TuneViolinActivity extends Activity {
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,5 +58,100 @@ public class TuneViolinActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			float x = event.getX();
+
+			Display display = getWindowManager().getDefaultDisplay();
+
+			/*
+			 * When the guitar string is touched it scales and get the x,y coordinates and
+			 * matches to the string
+			 */
+			@SuppressWarnings("deprecation")
+			int width = display.getWidth();
+			@SuppressWarnings("deprecation")
+			int height = display.getHeight();
+			
+			if(height<581){
+				if (((width * 106.0 / 480) - 20) < x
+						&& x < ((width * 106.0 / 480) + 20)) {
+					strartDialog("G");
+				}
+
+				if (((width * 188 / 480) - 20) < x
+						&& x < ((width * 188 / 480) + 20)) {
+					strartDialog("D");
+				}
+
+				if (((width * 280 / 480) - 20) < x
+						&& x < ((width * 280 / 480) + 20)) {
+					strartDialog("A");
+				}
+
+				if (((width * 263 / 480) - 20) < x
+						&& x < ((width * 263 / 480) + 20)) {
+					strartDialog("E");
+				}
+				
+			}else{
+				if (((width * 106.0 / 480) - 20) < x
+						&& x < ((width * 106.0 / 480) + 20)) {
+					strartDialog("G");
+				}
+
+				if (((width * 193 / 480) - 20) < x
+						&& x < ((width * 193 / 480) + 20)) {
+					strartDialog("D");
+				}
+
+				if (((width * 278 / 480) - 20) < x
+						&& x < ((width * 278 / 480) + 20)) {
+					strartDialog("A");
+				}
+
+				if (((width * 358 / 480) - 20) < x
+						&& x < ((width * 358 / 480) + 20)) {
+					strartDialog("E");
+				}
+				
+			}
+			
+
+		}
+		return super.onTouchEvent(event);
+	}
+	
+	/*
+	 * Creates the dialog box
+	 */
+	public void strartDialog(final String s) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				TuneViolinActivity.this);
+		builder.setMessage("Tune " + s + "?")
+				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						Intent intent = new Intent(getBaseContext(),
+								FrequencyViolinActivity.class);
+						
+								Bundle b1=new Bundle();
+								b1.putString("chosen_String", s);
+								intent.putExtras(b1);
+								startActivity(intent);
+					}
+				})
+				.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+							}
+						});
+		builder.create();
+		builder.show();
+	}
+	
 
 }

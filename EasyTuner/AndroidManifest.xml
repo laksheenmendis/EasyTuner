@@ -8,6 +8,9 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" >
+    </uses-permission>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -45,8 +48,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.easytuner.FrequencyActivity"
+            android:name="com.example.waveprocessor.FrequencyGuitarActivity"
             android:label="@string/title_activity_frequency" >
+        </activity>
+        <activity
+            android:name="com.example.waveprocessor.FrequencyViolinActivity"
+            android:label="@string/title_activity_frequency_violin" >
         </activity>
     </application>
 

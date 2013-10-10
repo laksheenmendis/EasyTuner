@@ -2,8 +2,6 @@ package com.example.easytuner;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,7 +18,7 @@ public class SplashActivity extends Activity {
 		setContentView(R.layout.activity_splash);
 
 		img = (ImageView) findViewById(R.id.imgLogo);
-		final Animation a = AnimationUtils.loadAnimation(this, R.anim.splash);
+		//final Animation a = AnimationUtils.loadAnimation(this, R.anim.splash);
 
 		new Handler().postDelayed(new Runnable() {
 

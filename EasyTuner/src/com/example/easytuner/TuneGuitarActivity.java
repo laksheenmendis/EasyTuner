@@ -1,6 +1,6 @@
 package com.example.easytuner;
 
-import com.example.waveprocessor.FrequencyActivity;
+import com.example.waveprocessor.FrequencyGuitarActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -57,6 +57,10 @@ public class TuneGuitarActivity extends Activity {
 
 			Display display = getWindowManager().getDefaultDisplay();
 
+			/*
+			 * When the guitar string is touched it scales and get the x,y coordinates and
+			 * matches to the string
+			 */
 			@SuppressWarnings("deprecation")
 			int width = display.getWidth();
 
@@ -95,6 +99,9 @@ public class TuneGuitarActivity extends Activity {
 		return super.onTouchEvent(event);
 	}
 
+	/*
+	 * Creates the dialog box
+	 */
 	public void strartDialog(final String s) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				TuneGuitarActivity.this);
@@ -102,7 +109,7 @@ public class TuneGuitarActivity extends Activity {
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						Intent intent = new Intent(getBaseContext(),
-								FrequencyActivity.class);
+								FrequencyGuitarActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("chosen_String", s);
 						intent.putExtras(bundle);
