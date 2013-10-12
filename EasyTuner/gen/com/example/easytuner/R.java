@@ -35,21 +35,25 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
-        public static final int easy1=0x7f020000;
-        public static final int easy2=0x7f020001;
-        public static final int easy3=0x7f020002;
-        public static final int guitar=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
-        public static final int new1=0x7f020005;
-        public static final int violin=0x7f020006;
-        public static final int violin1=0x7f020007;
+        public static final int action_help=0x7f020000;
+        public static final int blue_background=0x7f020001;
+        public static final int easy1=0x7f020002;
+        public static final int easy2=0x7f020003;
+        public static final int easy3=0x7f020004;
+        public static final int guitar=0x7f020005;
+        public static final int help=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int new1=0x7f020008;
+        public static final int violin=0x7f020009;
+        public static final int violin1=0x7f02000a;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0005;
-        public static final int btune_gui=0x7f0a0002;
-        public static final int btune_vio=0x7f0a0003;
+        public static final int action_settings=0x7f0a0006;
+        public static final int btune_gui=0x7f0a0003;
+        public static final int btune_vio=0x7f0a0004;
         public static final int button1=0x7f0a0000;
-        public static final int imgLogo=0x7f0a0004;
+        public static final int imageButton1=0x7f0a0002;
+        public static final int imgLogo=0x7f0a0005;
         public static final int textView1=0x7f0a0001;
     }
     public static final class layout {

@@ -131,7 +131,7 @@ public class FrequencyViolinActivity extends Activity {
 			recorder.release(); // release the recorders resources
 			recorder = null; // set the recorder to be garbage collected.
 			
-			txt.setText(decision);
+			//txt.setText(decision);
 			to_display=getToastText();
 			Toast.makeText(getApplicationContext(),to_display, Toast.LENGTH_SHORT).show();
 			start.setEnabled(true);

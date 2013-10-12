@@ -1,27 +1,38 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@drawable/new1">
-    
+    android:background="@drawable/blue_background"
+    android:onClick="help"
+    android:orientation="vertical" >
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="65dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="action_help"
+        android:src="@drawable/help" />
+
     <Button
         android:id="@+id/btune_gui"
         android:layout_width="250dp"
-        android:layout_height="94dp" 
-        android:layout_gravity="center"
-        android:layout_marginTop="130dp"
-        android:text="Tune Guitar"
-        android:onClick="tuneGuitar" />
+        android:layout_height="94dp"
+        android:layout_below="@+id/btune_vio"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:onClick="tuneGuitar"
+        android:text="Tune Guitar" />
 
     <Button
         android:id="@+id/btune_vio"
         android:layout_width="250dp"
-        android:layout_height="94dp" 
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:text="Tune Violin"
+        android:layout_height="94dp"
+        android:layout_alignLeft="@+id/btune_gui"
+        android:layout_below="@+id/imageButton1"
+        android:layout_marginTop="73dp"
         android:onClick="tuneViolin"
-        />
+        android:text="Tune Violin" />
     
-</LinearLayout>
+</RelativeLayout>

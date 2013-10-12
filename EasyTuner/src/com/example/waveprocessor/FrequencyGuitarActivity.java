@@ -65,6 +65,7 @@ public class FrequencyGuitarActivity extends Activity {
 			int bufferSize;
 			boolean isEven=false;
 			int sampleRate=8000; 	//from Hz
+			//int blockSize=1024;
 
 			bufferSize = AudioRecord
 					.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO,
@@ -103,27 +104,30 @@ public class FrequencyGuitarActivity extends Activity {
 																	// audioData
 																	// array
 						
-						DoubleFFT_1D fft = new DoubleFFT_1D(bufferSize);
-						array=new double[bufferSize];
-						for(int count=0;count<bufferSize;count++){
+						DoubleFFT_1D fft = new DoubleFFT_1D(1024);
+						array=new double[1024];
+						for(int count=0;count<1024;count++){
 							array[count]=audioData[count];
 							Log.d("copying to the double array",String.valueOf(array[count]));
 						}
 						fft.realForward(array);
 						
 						if(isEven){
-							index=evenFrequencyCalc(array,bufferSize);							
+							index=evenFrequencyCalc(array,1024);							
 						}else{
-							index=oddFrequencyCalc(array,bufferSize);
+							index=oddFrequencyCalc(array,1024);
 						}
 						
 						
-						frequency=(index * sampleRate)/bufferSize; 
+						frequency=(index * sampleRate)/1024; 
+						
 /*
 						// Zero Crossings Method to decode PCM data
 
-						numCrossing = 0; // initialize your number of zero
-											// crossings to 0
+						int numCrossing = 0; // initialize your number of zero
+						int p;
+						
+						// crossings to 0
 						for (p = 0; p < bufferSize / 4; p += 4) {
 							if (audioData[p] > 0 && audioData[p + 1] <= 0)
 								numCrossing++;
@@ -150,11 +154,11 @@ public class FrequencyGuitarActivity extends Activity {
 								numCrossing++;
 						}
 					
-*/
-						//frequency = (8000 / bufferSize) * (numCrossing / 2); // Set the audio
+
+						frequency = (8000 / bufferSize) * (numCrossing / 2); // Set the audio
 									// Frequency to half the number of zero crossings, times
 									// the number of samples our buffersize is per second.
-						
+		*/				
 						Log.d("FREQUENCY", String.valueOf(frequency));
 						/*if(decision==null){
 							compareWithStd(frequency);
@@ -178,7 +182,7 @@ public class FrequencyGuitarActivity extends Activity {
 			recorder.release(); // release the recorders resources
 			recorder = null; // set the recorder to be garbage collected.
 			
-			txt.setText(decision);
+			//txt.setText(decision);
 			to_display=getToastText();
 			Toast.makeText(getApplicationContext(),to_display, Toast.LENGTH_SHORT).show();
 			start.setEnabled(true);
@@ -203,7 +207,7 @@ public class FrequencyGuitarActivity extends Activity {
 		}
 		
 		double max=0;
-	    int maxIndex = 0;
+	    int maxIndex = -1;
 		
 		 for(int i = 1; i < spec.length; i++) {
              if (spec[i] > max) {
@@ -271,8 +275,8 @@ public class FrequencyGuitarActivity extends Activity {
 	 */
 	public void compareWithStd(int freq){
 		float std_frq=getStandardFrequency(string_note);
-		float range_low= (float) (std_frq - (std_frq*0.01));
-		float range_high= (float) (std_frq + (std_frq*0.01)) ;
+		float range_low= (float) (std_frq - (std_frq*0.015));
+		float range_high= (float) (std_frq + (std_frq*0.015)) ;
 		
 		if(freq>=range_low && freq<=range_high){
 			decision="matched";
