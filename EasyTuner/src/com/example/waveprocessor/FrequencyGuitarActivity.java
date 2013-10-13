@@ -6,25 +6,25 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder.AudioSource;
 import android.os.Bundle;
-import android.util.Log;
+//import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;;
+import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
+
+;
 
 public class FrequencyGuitarActivity extends Activity {
 
 	Button start;
 	String string_note;
 	float std_freq;
-	String decision=null;
+	String decision = null;
 	String to_display;
-	TextView txt;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guitar_frequency);
 
@@ -32,24 +32,21 @@ public class FrequencyGuitarActivity extends Activity {
 		string_note = bundle.getString("chosen_String");
 
 		start = (Button) findViewById(R.id.button1);
-		txt= (TextView) findViewById(R.id.textView1);
-		txt.setText(null);
 		start.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				txt.setText(null);
 				start.setEnabled(false);
 				recorderThread th = new recorderThread();
 				th.run();
-				
+
 			}
 		});
 	}
-	
+
 	class recorderThread extends Thread {
 		public boolean recording; // variable to start or stop recording
-		public int frequency; // the public variable that contains the frequency
+		public double frequency; // the public variable that contains the frequency
 								// value "heard", it is updated continually
 								// while the thread is running.
 
@@ -63,32 +60,43 @@ public class FrequencyGuitarActivity extends Activity {
 			short audioData[];
 			double array[];
 			int bufferSize;
-			boolean isEven=false;
-			int sampleRate=8000; 	//from Hz
-			//int blockSize=1024;
+			boolean isEven = false;
+			int sampleRate = 8000; // from Hz
+			int matched_count = 0, low_count = 0, high_count = 0;
 
 			bufferSize = AudioRecord
 					.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO,
-							AudioFormat.ENCODING_PCM_16BIT) * 3; // get the buffer size to use with
-																	// this audio record
+							AudioFormat.ENCODING_PCM_16BIT) * 3; // get the
+																	// buffer
+																	// size to
+																	// use with
+																	// this
+																	// audio
+																	// record
 
-			if(bufferSize % 2 ==0){
+			if (bufferSize % 2 == 0) {
 				isEven = true;
 			}
-			
-			recorder = new AudioRecord(AudioSource.VOICE_RECOGNITION, sampleRate,
+
+			recorder = new AudioRecord(AudioSource.MIC, sampleRate,
 					AudioFormat.CHANNEL_IN_MONO,
-					AudioFormat.ENCODING_PCM_16BIT, bufferSize); // instantiate the AudioRecorder
+					AudioFormat.ENCODING_PCM_16BIT, bufferSize); // instantiate
+																	// the
+																	// AudioRecorder
 
 			recording = true; // variable to use start or stop recording
-			audioData = new short[bufferSize]; // short array that pcm data is put into.
+			audioData = new short[bufferSize]; // short array that pcm data is
+												// put into.
 
 			long startTime = System.currentTimeMillis();
-			long endTime = startTime + 8000L; // 500L=0.5s, therefore,it will record for 6s (6000L)
+			long endTime = startTime + 8000L; // 500L=0.5s, therefore,it will
+												// record for 6s (6000L)
 
-			while (System.currentTimeMillis() < endTime) { // loop while recording is needed
+			while (System.currentTimeMillis() < endTime) { // loop while
+															// recording is
+															// needed
 				if (recorder.getState() == android.media.AudioRecord.STATE_INITIALIZED) // check
-															// to see if the recorder has initialized yet.
+					// to see if the recorder has initialized yet.
 
 					if (recorder.getRecordingState() == android.media.AudioRecord.RECORDSTATE_STOPPED)
 						recorder.startRecording(); // check to see if the
@@ -103,204 +111,155 @@ public class FrequencyGuitarActivity extends Activity {
 																	// the
 																	// audioData
 																	// array
-						
-						DoubleFFT_1D fft = new DoubleFFT_1D(1024);
-						array=new double[1024];
-						for(int count=0;count<1024;count++){
-							array[count]=audioData[count];
-							Log.d("copying to the double array",String.valueOf(array[count]));
+
+						DoubleFFT_1D fft = new DoubleFFT_1D(bufferSize);
+						array = new double[bufferSize];
+						for (int count = 0; count < bufferSize; count++) {
+							array[count] = (double) audioData[count];
+							// Log.d("copying to the double array",String.valueOf(array[count]));
 						}
+
 						fft.realForward(array);
-						
-						if(isEven){
-							index=evenFrequencyCalc(array,1024);							
-						}else{
-							index=oddFrequencyCalc(array,1024);
-						}
-						
-						
-						frequency=(index * sampleRate)/1024; 
-						
-/*
-						// Zero Crossings Method to decode PCM data
 
-						int numCrossing = 0; // initialize your number of zero
-						int p;
-						
-						// crossings to 0
-						for (p = 0; p < bufferSize / 4; p += 4) {
-							if (audioData[p] > 0 && audioData[p + 1] <= 0)
-								numCrossing++;
-							if (audioData[p] < 0 && audioData[p + 1] >= 0)
-								numCrossing++;
-							if (audioData[p + 1] > 0 && audioData[p + 2] <= 0)
-								numCrossing++;
-							if (audioData[p + 1] < 0 && audioData[p + 2] >= 0)
-								numCrossing++;
-							if (audioData[p + 2] > 0 && audioData[p + 3] <= 0)
-								numCrossing++;
-							if (audioData[p + 2] < 0 && audioData[p + 3] >= 0)
-								numCrossing++;
-							if (audioData[p + 3] > 0 && audioData[p + 4] <= 0)
-								numCrossing++;
-							if (audioData[p + 3] < 0 && audioData[p + 4] >= 0)
-								numCrossing++;
+						if (isEven) {
+							index = evenFrequencyCalc(array);
+						} else {
+							index = oddFrequencyCalc(array);
 						}
 
-						for (p = (bufferSize / 4) * 4; p < bufferSize - 1; p++) {
-							if (audioData[p] > 0 && audioData[p + 1] <= 0)
-								numCrossing++;
-							if (audioData[p] < 0 && audioData[p + 1] >= 0)
-								numCrossing++;
-						}
-					
+						frequency = (double)(index * sampleRate) / (double)bufferSize;
 
-						frequency = (8000 / bufferSize) * (numCrossing / 2); // Set the audio
-									// Frequency to half the number of zero crossings, times
-									// the number of samples our buffersize is per second.
-		*/				
-						Log.d("FREQUENCY", String.valueOf(frequency));
-						/*if(decision==null){
-							compareWithStd(frequency);
-						}else{
-							if(decision.equalsIgnoreCase("low")){
-								compareWithStd(frequency);
-							}else if(decision.equalsIgnoreCase("matched")){
-								compareWithStd(frequency);
-							}else if(decision.equalsIgnoreCase("high")){
-								endTime=System.currentTimeMillis();
-							}
-						}
-						*/
+						//Log.d("Note", string_note);
+						//Log.d("FREQUENCY", String.valueOf(frequency));
+
 						compareWithStd(frequency);
+
+						if (decision.equalsIgnoreCase("matched")) {
+							matched_count++;
+						} else if (decision.equalsIgnoreCase("low")) {
+							low_count++;
+						} else if (decision.equalsIgnoreCase("high")) {
+							high_count++;
+						}
+
+						//Log.d("decision in the loop", decision);
 					}
 
-			} 
+			}
 
 			if (recorder.getState() == android.media.AudioRecord.RECORDSTATE_RECORDING)
 				recorder.stop(); // stop the recorder before ending the thread
 			recorder.release(); // release the recorders resources
 			recorder = null; // set the recorder to be garbage collected.
-			
-			//txt.setText(decision);
-			to_display=getToastText();
-			Toast.makeText(getApplicationContext(),to_display, Toast.LENGTH_SHORT).show();
+
+			if (matched_count >= 3) {
+				to_display = "String is tuned";
+			} else if (high_count > low_count) {
+				to_display = "Loose the string";
+			} else {
+				to_display = "Tighten the string";
+			}
+
+			//Log.d("decision is ", to_display);
+			Toast.makeText(getApplicationContext(), to_display,
+					Toast.LENGTH_SHORT).show();
 			start.setEnabled(true);
 
 		}
-		
+
 	}
-	
+
 	/*
-	 * calculates the spectrum and finds out the index of the maximum value
-	 * when the bufferSize is even
+	 * calculates the spectrum and finds out the index of the maximum value when
+	 * the bufferSize is even
 	 */
-	public int evenFrequencyCalc(double[] a,int n){
-		
-		int k=n/2;
-		double spec[]=new double[k];
-		
-		spec[0]=a[0];
-		
-		for(int c=2;c<n;c=c+2){		
-				spec[c/2]=Math.sqrt(Math.pow(a[c],2) + Math.pow(a[c+1],2));			
+	public int evenFrequencyCalc(double[] a) {
+
+		int k = a.length / 2;
+		double spec[] = new double[k];
+
+		for (int c = 0; c < a.length; c += 2) {
+			spec[c / 2] = Math.sqrt(Math.pow(a[c], 2) + Math.pow(a[c + 1], 2));
 		}
-		
-		double max=0;
-	    int maxIndex = -1;
-		
-		 for(int i = 1; i < spec.length; i++) {
-             if (spec[i] > max) {
-                 max = spec[i];
-                 maxIndex = i;
-             }
-		 }      
-		 
-		 return maxIndex;
-	}	
-	
-	/*
-	 * calculates the spectrum and finds out the index of the maximum value
-	 * when the bufferSize is odd
-	 */
-	public int oddFrequencyCalc(double[] a,int n){
-		int k=(n-1)/2;
-		double spec[]=new double[k];
-		
-		spec[0]=a[0];
-		
-		for(int c=2;c<n-1;c=c+2){		
-				spec[c/2]=Math.sqrt(Math.pow(a[c],2) + Math.pow(a[c+1],2));			
+
+		double max = 0;
+		int maxIndex = -1;
+
+		for (int i = 1; i < spec.length; i++) {
+			if (spec[i] > max) {
+				max = spec[i];
+				maxIndex = i;
+			}
 		}
-		
-		double max=0;
-	    int maxIndex = 0;
-		
-		 for(int i = 1; i < spec.length; i++) {
-             if (spec[i] > max) {
-                 max = spec[i];
-                 maxIndex = i;
-             }
-		 }      
-		 
-		 return maxIndex;
+
+		return maxIndex;
 	}
-	
+
+	/*
+	 * calculates the spectrum and finds out the index of the maximum value when
+	 * the bufferSize is odd
+	 */
+	public int oddFrequencyCalc(double[] a) {
+		int k = (a.length - 1) / 2;
+		double spec[] = new double[k];
+
+		for (int c = 0; c < (a.length - 1); c += 2) {
+			spec[c / 2] = Math.sqrt(Math.pow(a[c], 2) + Math.pow(a[c + 1], 2));
+		}
+
+		double max = 0;
+		int maxIndex = 0;
+
+		for (int i = 1; i < spec.length; i++) {
+			if (spec[i] > max) {
+				max = spec[i];
+				maxIndex = i;
+			}
+		}
+
+		return maxIndex;
+	}
+
 	/*
 	 * when the string name is passed, this returns the standard frequency
 	 */
-	public float getStandardFrequency(String note){
-		
+	public float getStandardFrequency(String note) {
+
 		float f = 0;
-		
-		if(note.equalsIgnoreCase("low e")){
-			f=(float)82.41;
-		}else if(note.equalsIgnoreCase("a")){
-			f=(float) 110.00;
-		}else if(note.equalsIgnoreCase("d")){
-			f=(float) 146.83;
-		}else if(note.equalsIgnoreCase("g")){
-			f=(float) 196.00;			
-		}else if(note.equalsIgnoreCase("b")){
-			f=(float) 246.94;			
-		}else if(note.equalsIgnoreCase("high e")){
-			f=(float) 329.63;
+
+		if (note.equalsIgnoreCase("low e")) {
+			f = (float) 82.41;
+		} else if (note.equalsIgnoreCase("a")) {
+			f = (float) 110.00;
+		} else if (note.equalsIgnoreCase("d")) {
+			f = (float) 146.83;
+		} else if (note.equalsIgnoreCase("g")) {
+			f = (float) 196.00;
+		} else if (note.equalsIgnoreCase("b")) {
+			f = (float) 246.94;
+		} else if (note.equalsIgnoreCase("high e")) {
+			f = (float) 329.63;
 		}
 		return f;
-		
+
 	}
-	
+
 	/*
-	 * compares the calculated frequency with the standard frequency of the string
+	 * compares the calculated frequency with the standard frequency of the
+	 * string
 	 */
-	public void compareWithStd(int freq){
-		float std_frq=getStandardFrequency(string_note);
-		float range_low= (float) (std_frq - (std_frq*0.015));
-		float range_high= (float) (std_frq + (std_frq*0.015)) ;
-		
-		if(freq>=range_low && freq<=range_high){
-			decision="matched";
-		}else if(freq<range_low){
-			decision="low";			
-		}else
-			decision="high";
-		
+	public void compareWithStd(double freq) {
+		float std_frq = getStandardFrequency(string_note);
+		float range_low = (float) (std_frq - (std_frq * 0.015));
+		float range_high = (float) (std_frq + (std_frq * 0.015));
+
+		if (freq >= range_low && freq <= range_high) {
+			decision = "matched";
+		} else if (freq < range_low) {
+			decision = "low";
+		} else
+			decision = "high";
+
 	}
-	
-	/*
-	 * one of the 3 toast message types are chosen
-	 */
-	public String getToastText(){
-		String msg = null;
-		
-		if(decision.equalsIgnoreCase("low")){
-			msg="Tighten the string";
-		}else if(decision.equalsIgnoreCase("high")){
-			msg="Loose the string";
-		}else if(decision.equalsIgnoreCase("matched")){
-			msg="You're done";
-		}
-		return msg;
-	}
-	
+
 }

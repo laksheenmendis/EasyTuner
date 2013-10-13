@@ -105,6 +105,7 @@ public class TuneGuitarActivity extends Activity {
 	public void strartDialog(final String s) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				TuneGuitarActivity.this);
+
 		builder.setMessage("Tune " + s + "?")
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {

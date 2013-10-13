@@ -93,7 +93,7 @@ public class TuneViolinActivity extends Activity {
 					strartDialog("A");
 				}
 
-				if (((width * 263 / 480) - 20) < x
+				if (((width * 363 / 480) - 20) < x
 						&& x < ((width * 263 / 480) + 20)) {
 					strartDialog("E");
 				}

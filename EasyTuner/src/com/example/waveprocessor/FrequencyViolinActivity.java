@@ -7,7 +7,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder.AudioSource;
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
+//import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -48,7 +48,7 @@ public class FrequencyViolinActivity extends Activity {
 	
 	class recorderThread extends Thread {
 		public boolean recording; // variable to start or stop recording
-		public int frequency; // the public variable that contains the frequency
+		public double frequency; // the public variable that contains the frequency
 								// value "heard", it is updated continually
 								// while the thread is running.
 
@@ -64,6 +64,8 @@ public class FrequencyViolinActivity extends Activity {
 			int bufferSize;
 			boolean isEven=false;
 			int sampleRate=8000; 	//from Hz
+			int matched_count = 0, low_count = 0, high_count = 0;
+
 
 			bufferSize = AudioRecord
 					.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO,
@@ -74,7 +76,7 @@ public class FrequencyViolinActivity extends Activity {
 				isEven = true;
 			}
 			
-			recorder = new AudioRecord(AudioSource.VOICE_RECOGNITION, sampleRate,
+			recorder = new AudioRecord(AudioSource.MIC, sampleRate,
 					AudioFormat.CHANNEL_IN_MONO,
 					AudioFormat.ENCODING_PCM_16BIT, bufferSize); // instantiate the AudioRecorder
 
@@ -106,7 +108,7 @@ public class FrequencyViolinActivity extends Activity {
 						array=new double[bufferSize];
 						for(int count=0;count<bufferSize;count++){
 							array[count]=audioData[count];
-							Log.d("copying to the double array",String.valueOf(array[count]));
+							//Log.d("copying to the double array",String.valueOf(array[count]));
 						}
 						fft.realForward(array);
 						
@@ -117,11 +119,19 @@ public class FrequencyViolinActivity extends Activity {
 						}
 						
 						
-						frequency=(index * sampleRate)/bufferSize; 
+						frequency=(double)(index * sampleRate)/(double)bufferSize; 
 
-						Log.d("FREQUENCY", String.valueOf(frequency));
+						//Log.d("FREQUENCY", String.valueOf(frequency));
 						
 						compareWithStd(frequency);
+						
+						if (decision.equalsIgnoreCase("matched")) {
+							matched_count++;
+						} else if (decision.equalsIgnoreCase("low")) {
+							low_count++;
+						} else if (decision.equalsIgnoreCase("high")) {
+							high_count++;
+						}
 					}
 
 			} 
@@ -130,12 +140,19 @@ public class FrequencyViolinActivity extends Activity {
 				recorder.stop(); // stop the recorder before ending the thread
 			recorder.release(); // release the recorders resources
 			recorder = null; // set the recorder to be garbage collected.
-			
-			//txt.setText(decision);
-			to_display=getToastText();
-			Toast.makeText(getApplicationContext(),to_display, Toast.LENGTH_SHORT).show();
-			start.setEnabled(true);
+	
+			if (matched_count >= 3) {
+				to_display = "String is tuned";
+			} else if (high_count > low_count) {
+				to_display = "Loose the string";
+			} else {
+				to_display = "Tighten the string";
+			}
 
+		//	Log.d("decision is ", to_display);
+			Toast.makeText(getApplicationContext(), to_display,
+					Toast.LENGTH_SHORT).show();
+			start.setEnabled(true);
 		}
 		
 	}
@@ -218,7 +235,7 @@ public class FrequencyViolinActivity extends Activity {
 	/*
 	 * compares the calculated frequency with the standard frequency of the string
 	 */
-	public void compareWithStd(int freq){
+	public void compareWithStd(double freq){
 		float std_frq=getStandardFrequency(string_note);
 		float range_low= (float) (std_frq - (std_frq*0.01));
 		float range_high= (float) (std_frq + (std_frq*0.01)) ;
@@ -232,19 +249,4 @@ public class FrequencyViolinActivity extends Activity {
 		
 	}
 	
-	/*
-	 * one of the 3 toast message types are chosen
-	 */
-	public String getToastText(){
-		String msg = null;
-		
-		if(decision.equalsIgnoreCase("low")){
-			msg="Tighten the string";
-		}else if(decision.equalsIgnoreCase("high")){
-			msg="Loose the string";
-		}else if(decision.equalsIgnoreCase("matched")){
-			msg="You're done";
-		}
-		return msg;
-	}
 }

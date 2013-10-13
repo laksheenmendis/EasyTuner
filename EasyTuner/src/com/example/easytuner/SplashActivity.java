@@ -18,7 +18,6 @@ public class SplashActivity extends Activity {
 		setContentView(R.layout.activity_splash);
 
 		img = (ImageView) findViewById(R.id.imgLogo);
-		//final Animation a = AnimationUtils.loadAnimation(this, R.anim.splash);
 
 		new Handler().postDelayed(new Runnable() {
 

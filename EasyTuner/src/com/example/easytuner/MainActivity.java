@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
 		
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -37,7 +38,8 @@ public class MainActivity extends Activity {
 	public void action_help(View view){
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				MainActivity.this);
-		builder.setMessage("If you want to tune the guitar, click 'Tune Guitar' button")
+		builder.setMessage("If you want to tune the guitar, click 'Tune Guitar' button." +
+				"If you want to tune the violin, click 'Tune Violin' button")
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {						
 					}

@@ -43,9 +43,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int guitar=0x7f020005;
         public static final int help=0x7f020006;
         public static final int ic_launcher=0x7f020007;
-        public static final int new1=0x7f020008;
-        public static final int violin=0x7f020009;
-        public static final int violin1=0x7f02000a;
+        public static final int ic_launcher_icon=0x7f020008;
+        public static final int new1=0x7f020009;
+        public static final int violin=0x7f02000a;
+        public static final int violin1=0x7f02000b;
     }
     public static final class id {
         public static final int action_settings=0x7f0a0006;
